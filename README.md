@@ -59,8 +59,8 @@ Configure and run Regex Formatter in three steps:
     [
       extensions: [".ex", ".exs"],     #  ┌──── [8] Try handy substitution presets.
       replacements: [                  #  │
-        RegexFormatter.Presets.trim_sigil_whitespace([:u], collapse: true),
-        RegexFormatter.Presets.do_on_separate_line_after_multiline_signature(),
+        RegexFormatter.preset_trim_sigil_whitespace([:u], collapse: true),
+        RegexFormatter.preset_do_on_separate_line_after_multiline_signature(),
       ]
     ]
   ]
