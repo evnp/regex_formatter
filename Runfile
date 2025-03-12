@@ -1,0 +1,20 @@
+repl: compile # start interactive shell
+  iex -S mix
+
+compile: # recompile files on change in background
+  tmex mix-compile --kill --quiet
+  tmex mix-compile --reattach --detached 'git ls-files | entr mix compile'
+
+test: # run tests
+  mix test.watch
+
+format: # format
+  mix format
+
+clean: # remove dependencies and build files
+  rm -rf _build deps
+
+install: # install dependencies
+  mix deps.get
+
+reinstall: clean install # reinstall dependencies from scratch
