@@ -67,7 +67,12 @@ Configure and run Regex Formatter in three steps:
 ]
 ```
 
-# License
+## Prior Art
+
+Inspired by the incredibly cool https://github.com/frerich/filter_formatter, which
+also helped provide excellent initial guidance for setting up a `mix format` plugin.
+
+## License
 
 MIT
 
