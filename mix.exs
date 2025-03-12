@@ -2,7 +2,7 @@ defmodule RegexFormatter.MixProject do
   use Mix.Project
 
   @name "RegexFormatter"
-  @version "0.1.0"
+  @version "0.1.1"
   @repository "https://github.com/evnp/regex_formatter"
 
   defp description() do
