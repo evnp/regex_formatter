@@ -9,7 +9,7 @@ Add `regex_formatter` to your list of dependencies in `mix.exs`:
 ```elixir
 def deps do
   [
-    {:regex_formatter, "~> 0.1.0"}
+    {:regex_formatter, "~> 0.1"}
   ]
 end
 ```
