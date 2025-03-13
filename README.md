@@ -56,12 +56,11 @@ Configure and run Regex Formatter in three steps:
         },
       ]
     ],
-    [
-      extensions: [".ex", ".exs"],     #  ┌──── [8] Try handy substitution presets.
-      replacements: [                  #  │
-        RegexFormatter.preset_trim_sigil_whitespace([:u], collapse: true),
-        RegexFormatter.preset_do_on_separate_line_after_multiline_signature(),
-      ]
+    [                               #  ┌─────── [8] Try handy substitution presets.
+      extensions: [".ex", ".exs"],  #  │
+      preset_trim_sigil_whitespace: [:u],
+      preset_collapse_sigil_whitespace: [:u, :SQL],
+      preset_do_on_separate_line_after_multiline_signature: true
     ]
   ]
 ]

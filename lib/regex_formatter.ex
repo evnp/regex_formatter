@@ -30,7 +30,7 @@ defmodule RegexFormatter do
             repeat: 100,
             # Repeat substitutions to correctly handle overlapping matches.
             # (repeated substitution will stop as soon as text stops changing)
-          },
+          }
         ]
       ],
       [
@@ -39,15 +39,14 @@ defmodule RegexFormatter do
           {
             ~r/(~u["][^"]+[^"\\s])\\s+"/s,
             ~S'\\1"'
-          },
+          }
         ]
       ],
-      [
-        extensions: [".ex", ".exs"],  #  ┌──── [8] Try handy substitution presets.
-        replacements: [               #  │
-          RegexFormatter.preset_trim_sigil_whitespace([:u], collapse: true),
-          RegexFormatter.preset_do_on_separate_line_after_multiline_signature(),
-        ]
+      [                               #  ┌──── [8] Try handy substitution presets.
+        extensions: [".ex", ".exs"],  #  │
+        preset_trim_sigil_whitespace: [:u],
+        preset_collapse_sigil_whitespace: [:u, :SQL],
+        preset_do_on_separate_line_after_multiline_signature: true
       ]
     ]
   ]
@@ -86,20 +85,44 @@ defmodule RegexFormatter do
       end
 
     Enum.reduce(matching_replacement_configs, text, fn config, text ->
+      replacements = config[:replacements] || []
+
       replacements =
-        config[:replacements]
-        |> Enum.flat_map(fn replacement ->
+        if sigils = config[:preset_trim_sigil_whitespace] do
+          Enum.concat(
+            replacements,
+            preset_trim_sigil_whitespace(sigils)
+          )
+        else
+          replacements
+        end
+
+      replacements =
+        if sigils = config[:preset_collapse_sigil_whitespace] do
+          Enum.concat(
+            replacements,
+            preset_collapse_sigil_whitespace(sigils)
+          )
+        else
+          replacements
+        end
+
+      replacements =
+        if config[:preset_do_on_separate_line_after_multiline_signature] do
+          Enum.concat(
+            replacements,
+            preset_do_on_separate_line_after_multiline_signature()
+          )
+        else
+          replacements
+        end
+
+      # Set default empty array for each replacement's 3rd options argument:
+      replacements =
+        Enum.map(replacements, fn replacement ->
           case replacement do
-            [_ | _] -> replacement
-            [] -> replacement
-            _ -> [replacement]
-          end
-        end)
-        |> Enum.flat_map(fn replacement ->
-          case replacement do
-            {search, replace} -> [{search, replace, []}]
-            nil -> []
-            _ -> [replacement]
+            {search, replace} -> {search, replace, []}
+            _ -> replacement
           end
         end)
 
@@ -160,7 +183,7 @@ defmodule RegexFormatter do
     """
   end
 
-  def preset_trim_sigil_whitespace(sigils, options \\ []) do
+  defp preset_trim_sigil_whitespace(sigils) do
     sigils
     |> Enum.flat_map(fn sigil ->
       open_close_chars()
@@ -173,14 +196,6 @@ defmodule RegexFormatter do
             ~r/(~#{sigil}#{open})\s+/s,
             ~S'\1'
           },
-          if options[:collapse] do
-            {
-              ~r/(~#{sigil}#{open}[^#{close}]+[^#{close}\s])  +([^#{close}\s])/s,
-              ~S'\1 \2',
-              repeat: 100
-              # Repeat substitution to correctly handle overlapping matches.
-            }
-          end,
           {
             ~r/(~#{sigil}#{open}[^#{close}]+[^#{close}\s])\s+#{close}/s,
             ~S'\1"'
@@ -190,7 +205,27 @@ defmodule RegexFormatter do
     end)
   end
 
-  def preset_do_on_separate_line_after_multiline_signature() do
+  defp preset_collapse_sigil_whitespace(sigils) do
+    sigils
+    |> Enum.flat_map(fn sigil ->
+      open_close_chars()
+      |> Enum.flat_map(fn open_close ->
+        open = "\\#{String.at(open_close, 0)}"
+        close = "\\#{String.at(open_close, 1)}"
+
+        [
+          {
+            ~r/(~#{sigil}#{open}[^#{close}]+[^#{close}\s])  +([^#{close}\s])/s,
+            ~S'\1 \2',
+            repeat: 100
+            # Repeat substitution to correctly handle overlapping matches.
+          }
+        ]
+      end)
+    end)
+  end
+
+  defp preset_do_on_separate_line_after_multiline_signature() do
     [
       # The following regex handles cases where "do" is preceded by any number
       # of closing braces, most commonly "] do", but also cases such as "})] do".
