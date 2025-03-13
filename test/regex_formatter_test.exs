@@ -28,7 +28,7 @@ defmodule RegexFormatterTest do
                 extensions: [".ex", ".exs"],
                 preset_trim_sigil_whitespace: [:u],
                 preset_collapse_sigil_whitespace: [:u],
-                preset_do_on_separate_line_after_multiline_signature: true
+                preset_do_on_separate_line_after_multiline_keyword_args: true
               ]
             ]
           ) ==
@@ -138,7 +138,7 @@ defmodule RegexFormatterTest do
       end
     end
 
-    test "preset_do_on_separate_line_after_multiline_signature" do
+    test "preset_do_on_separate_line_after_multiline_keyword_args" do
       for ex <- [".ex", ".exs"] do
         assert(
           RegexFormatter.format(input(),
@@ -146,7 +146,7 @@ defmodule RegexFormatterTest do
             regex_formatter: [
               [
                 extensions: [".ex", ".exs"],
-                preset_do_on_separate_line_after_multiline_signature: true
+                preset_do_on_separate_line_after_multiline_keyword_args: true
               ]
             ]
           ) ==

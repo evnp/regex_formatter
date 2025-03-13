@@ -46,7 +46,7 @@ defmodule RegexFormatter do
         extensions: [".ex", ".exs"],  #  │
         preset_trim_sigil_whitespace: [:u],
         preset_collapse_sigil_whitespace: [:u, :SQL],
-        preset_do_on_separate_line_after_multiline_signature: true
+        preset_do_on_separate_line_after_multiline_keyword_args: true
       ]
     ]
   ]
@@ -108,10 +108,10 @@ defmodule RegexFormatter do
         end
 
       replacements =
-        if config[:preset_do_on_separate_line_after_multiline_signature] do
+        if config[:preset_do_on_separate_line_after_multiline_keyword_args] do
           Enum.concat(
             replacements,
-            preset_do_on_separate_line_after_multiline_signature()
+            preset_do_on_separate_line_after_multiline_keyword_args()
           )
         else
           replacements
@@ -225,7 +225,7 @@ defmodule RegexFormatter do
     end)
   end
 
-  defp preset_do_on_separate_line_after_multiline_signature() do
+  defp preset_do_on_separate_line_after_multiline_keyword_args() do
     [
       # The following regex handles cases where "do" is preceded by any number
       # of closing braces, most commonly "] do", but also cases such as "})] do".

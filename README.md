@@ -60,7 +60,7 @@ Configure and run Regex Formatter in three steps:
       extensions: [".ex", ".exs"],  #  │
       preset_trim_sigil_whitespace: [:u],
       preset_collapse_sigil_whitespace: [:u, :SQL],
-      preset_do_on_separate_line_after_multiline_signature: true
+      preset_do_on_separate_line_after_multiline_keyword_args: true
     ]
   ]
 ]
