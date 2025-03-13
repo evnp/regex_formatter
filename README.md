@@ -66,6 +66,44 @@ Configure and run Regex Formatter in three steps:
 ]
 ```
 
+## Presets
+
+Included preset substitutions can give an idea of what this plugin may be useful for:
+
+- `preset_trim_sigil_whitespace`
+    - When provided a list of sigils, eg. `[:u, :SQL]`, this preset will trim leading
+      and trailing whitespace from around these sigil values in code. For instance,
+      `~u" hello  world  "` will become `~u"hello  world"`. This also works with
+      multiline sigil values (without disrupting newlines).
+    - Add `preset_trim_sigil_whitespace: [:u, :SQL]` to `regex_formatter` config to
+      invoke this preset (see full example above).
+
+- `preset_collapse_sigil_whitespace`
+    - When provided a list of sigils, eg. `[:u, :SQL]`, this preset will "collapse"
+      extraneous whitespace within these sigil values in code. For instance,
+      `~u" hello  world  "` will become `~u" hello world  "`. This also works with
+      multiline sigil values (without disrupting newlines).
+    - Add `preset_collapse_sigil_whitespace: [:u, :SQL]` to `regex_formatter` config to
+      invoke this preset (see full example above).
+
+- `preset_do_on_separate_line_after_multiline_keyword_args`
+    - By default, when a function call has keyword args split across multiple lines,
+      `mix format` places `do` on the same line as the last keyword arg. Depending on
+      exact indentation, this can lead to some difficult-to-read code, as it's not
+      always clear at a glance (based on indentation) which lines constitute keyword
+      args vs. expressions within the `do` scope.
+    - This readability problem is especially pronounced when using the excellent
+      [Temple](https://github.com/mhanberg/temple) system to compose HTML templates.
+    - This preset solves the problem by moving `do` onto its own line in these cases,
+      maintaining correct indentation of keyword args and `do` in the process.
+    - Add `preset_do_on_separate_line_after_multiline_keyword_args: true` to
+      `regex_formatter` config to invoke this preset (see full example above).
+
+Together, `preset_trim_sigil_whitespace` and `preset_collapse_sigil_whitespace` work
+well with the `~u`&nbsp;[unique-words sigil](https://hexdocs.pm/unique_words_sigil),
+well-suited for HTML classes where surrounding/repeated spaces are irrelevant<br>
+(and class names should be unique).
+
 ## Prior Art
 
 Inspired by the incredibly cool https://github.com/frerich/filter_formatter, which
